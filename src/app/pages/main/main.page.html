@@ -14,7 +14,13 @@
     </ion-toolbar>
   </ion-header>
   <div id="container">
-    <strong class="capitalize">Main</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <div class="instruction">Instruction : Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto beatae nesciunt hic a consectetur. Ab, aut? At neque optio voluptatem perspiciatis, reprehenderit aperiam assumenda perferendis ullam, facilis, magnam eveniet libero.</div>
+    <div id="left" class="box left" (click)="onClick($event)">Left</div>
+    <div id="right" class="box right" (click)="onClick($event)">Right</div>
+    <div class="form-group">
+      <label for="coin">coin</label>
+      <input type="text">
+    </div>
+    <button class="btn-bet">Bet !!!</button>
   </div>
 </ion-content>

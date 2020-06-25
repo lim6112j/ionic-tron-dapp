@@ -20,5 +20,13 @@ export class MainPage implements OnInit {
     log('Hex Address')(this.tw.address.toHex('TNq1zwWDPAQEw37NJhbaWrNZ79kJKa7ojS'));
     log('Hex Address to String')(this.tw.address.fromHex('418d0d1f9a90cb4e5aeb9de7e2650183cf9626f140'));
   }
+  onClick(e) {
+    //   console.log(`%c${e.target}`, 'color: red');
+    // console.log(e);
+    e.target.id === null ? null 
+    : e.target.id === 'left' ? e.target.setAttribute('class', 'box left red')
+    : e.target.id === 'right' ? e.target.setAttribute('class', 'box right red')
+    : null;
 
+  }
 }
