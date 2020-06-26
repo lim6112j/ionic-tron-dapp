@@ -1,0 +1,8 @@
+{  
+  "/v1/eth/main/*": {  
+     "target": "https://api.blockcypher.com",  
+     "secure": false,  
+     "changeOrigin": true,
+     "logLevel": "debug"  
+  }  
+}  
