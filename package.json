@@ -26,6 +26,7 @@
     "rxjs": "~6.5.1",
     "tronweb": "^2.10.2",
     "tslib": "^1.10.0",
+    "web3": "^1.2.9",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
