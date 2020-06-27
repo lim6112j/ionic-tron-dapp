@@ -1,17 +1,19 @@
 ion-menu-button {
   color: var(--ion-color-primary);
 }
-
+.question {
+  --border-color: var(--ion-color-danger);
+}
 #container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 2rem;
   // text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  // position: absolute;
+  // left: 0;
+  // right: 0;
+  // top: 50%;
+  // transform: translateY(-50%);
   .instruction {
     grid-column: 2/4;
   }

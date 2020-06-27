@@ -13,14 +13,48 @@
       <ion-title size="large">Main</ion-title>
     </ion-toolbar>
   </ion-header>
-  <div id="container">
-    <div class="instruction">Instruction : Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto beatae nesciunt hic a consectetur. Ab, aut? At neque optio voluptatem perspiciatis, reprehenderit aperiam assumenda perferendis ullam, facilis, magnam eveniet libero.</div>
-    <div id="left" class="box left" (click)="onClick($event)">Left</div>
-    <div id="right" class="box right" (click)="onClick($event)">Right</div>
-    <div class="form-group">
-      <label for="coin">coin</label>
-      <input type="text">
-    </div>
-    <button class="btn-bet">Bet !!!</button>
-  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4" offset="2">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              Instruction : Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti placeat dolore odio quae iure nihil voluptate velit laudantium distinctio, facilis officiis architecto ratione labore esse. Aspernatur officiis a consequuntur iste.
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="5">
+              <ion-item id="left" (click)="onClick($event)" [ngClass]="questionL">Left</ion-item>
+            </ion-col>
+            <ion-col size="5" offset="2">
+              <ion-item id="right"  (click)="onClick($event)" [ngClass]="questionR">Right</ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label position="floating">how much will you bet?</ion-label>
+                <ion-input [(ngModel)]="inputValue"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button [disabled]="btnDisabled" (click)="onSubmit()">Bet !!!</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </ion-col>
+      <ion-col size="4">
+        <ion-item-divider>
+          <ion-label>
+            Ethereum Block Hash
+          </ion-label>
+        </ion-item-divider>
+        <ion-item *ngFor="let item of deliveryData.slice().reverse()" textWrap>
+          {{ item.timestamp * 1000 | date: 'hh:mm:ss' }} - {{item.number}} - {{item.hash}}
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>
