@@ -3,8 +3,9 @@ import TronWeb from 'tronweb';
 import {log} from '../../../utils/utils';
 import {DatafeedService} from '../../services/datafeed.service';
 import {Subscription, interval, of, from} from 'rxjs';
-import {ajax} from 'rxjs/ajax';
-import { BoundText } from '@angular/compiler/src/render3/r3_ast';
+import { ToastController } from '@ionic/angular';
+import { MenuController } from '@ionic/angular';
+
 interface DataFormat {
   hash: string;
   height?: string;
@@ -34,13 +35,20 @@ export class MainPage implements OnInit, OnDestroy {
     inputValue: string;
     deliveryData: DataFormat[] = [{hash: 'hash...', height: 'height', time: 'time'}];
     bet: Bet;
+    leftImage = '';
+    rightImage = '';
+    bgImage = 'gamble.png';
+    handCoinImage = '../../../assets/hand_coin.png';
   constructor(
-    private dataService: DatafeedService
+    private dataService: DatafeedService,
+    private toastCtrl: ToastController,
+    private menu: MenuController
   ) {
     this.tw = new TronWeb({
         fullHost: 'https://api.trongrid.io',
         privateKey: 'f21841659a7efc2f5a6d579724c6134fefd28cf013a261d39c9a1c232f10ec04',
     });
+    this.menu.enable(false);
    }
   ngOnDestroy(): void {
     this.subs.unsubscribe();
@@ -53,14 +61,29 @@ export class MainPage implements OnInit, OnDestroy {
     this.subs = this.dataService.getData().subscribe((v) => {
       console.log(v);
       this.block = v;
-      (this.bet && this.bet.height) === this.block.number ? this.bet.which === 'left' ? console.log('success') : console.log('failed')
-        : console.log('not betted');
+      this.winOrLose(this.block);
       this.printHash(this.block.hash.slice(2, 3));
       if (this.deliveryData.length > 4) {
         this.deliveryData.shift();
       }
       this.deliveryData.push(this.block);
     });
+  }
+  winOrLose(block) {
+    (this.bet && this.bet.height) === this.block.number
+    ? this.bet.which
+      ?  this.evaluate(this.block)
+      : console.log('bet is not determined')
+    : console.log('not betted');
+  }
+  evaluate(block) {
+    this.bet.which === 'left'
+    ? block.hash.slice(2, 3) < 8
+      ? this.presentToast('your bet succeeds')
+      : this.presentToast('your bet failed')
+    : block.hash.slice(2, 3) > 7
+      ? this.presentToast('your bet succeeds')
+      : this.presentToast('your bet was failed');
   }
   onSubmit() {
     const heightNum = parseInt(this.deliveryData[this.deliveryData.length - 1].number, 10) + 1;
@@ -69,7 +92,8 @@ export class MainPage implements OnInit, OnDestroy {
       which: this.selectedValue,
       value: parseInt(this.inputValue, 10),
       height: heightNum
-    }
+    };
+    this.presentToast(`you bet ${this.selectedValue}, amount of ${this.inputValue} on the hash height of ${heightNum}`);
   }
   onClick(e) {
     //   console.log(`%c${e.target}`, 'color: red');
@@ -96,5 +120,12 @@ export class MainPage implements OnInit, OnDestroy {
   }
   printHash(v) {
     console.log(v);
+  }
+  presentToast = async (msg: string) => {
+    const toastIns = await this.toastCtrl.create({
+      message: msg,
+      duration: 5000
+    });
+    toastIns.present();
   }
 }

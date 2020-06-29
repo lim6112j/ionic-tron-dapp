@@ -15,36 +15,51 @@
   </ion-header>
   <ion-grid>
     <ion-row>
-      <ion-col size="4" offset="2">
+      <ion-img [src] = "handCoinImage"></ion-img>
+    </ion-row>
+    <ion-row>
+      <ion-col>
         <ion-grid>
           <ion-row>
             <ion-col>
-              Instruction : Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corrupti placeat dolore odio quae iure nihil voluptate velit laudantium distinctio, facilis officiis architecto ratione labore esse. Aspernatur officiis a consequuntur iste.
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size="5">
-              <ion-item id="left" (click)="onClick($event)" [ngClass]="questionL">Left</ion-item>
-            </ion-col>
-            <ion-col size="5" offset="2">
-              <ion-item id="right"  (click)="onClick($event)" [ngClass]="questionR">Right</ion-item>
+              Instruction : Predict the first num of each block hash (0 ~ F), 0~7 is 'LOW', 8~F is 'HIGH'
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col size="6">
+              <ion-item id="left" (click)="onClick($event)" [ngClass]="questionL">
+                <ion-item-group class="ion-text-center">
+                  <ion-label><ion-icon name="thumbs-down-outline"></ion-icon> Down</ion-label>
+                </ion-item-group>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6">
+              <ion-item id="right"  (click)="onClick($event)" [ngClass]="questionR">
+                <ion-item-group class="ion-text-center">
+                  <ion-label><ion-icon name="thumbs-up-outline"></ion-icon> Up</ion-label>
+                </ion-item-group>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
               <ion-item>
                 <ion-label position="floating">how much will you bet?</ion-label>
                 <ion-input [(ngModel)]="inputValue"></ion-input>
               </ion-item>
             </ion-col>
-            <ion-col size="6">
-              <ion-button [disabled]="btnDisabled" (click)="onSubmit()">Bet !!!</ion-button>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button [disabled]="btnDisabled" (click)="onSubmit()" expand="block">Bet !!!</ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>
 
       </ion-col>
-      <ion-col size="4">
+    </ion-row>
+    <ion-row>
+      <ion-col>
         <ion-item-divider>
           <ion-label>
             Ethereum Block Hash
