@@ -5,7 +5,7 @@ import {DatafeedService} from '../../services/datafeed.service';
 import {Subscription, interval, of, from} from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
-
+import { BetdataService } from 'src/app/services/betdata.service';
 interface DataFormat {
   hash: string;
   height?: string;
@@ -17,7 +17,18 @@ interface Bet {
   which: string;
   value: number;
   height: number;
+  name: string;
 }
+const observer =  {
+    next: function(data: any) {
+      log('Subscription value')(data);
+      this.unsubscribe();
+    },
+    error: log('Subscription Error'),
+    complete: function(){
+      log('completed')(this);
+    }
+  };
 @Component({
   selector: 'app-main',
   templateUrl: './main.page.html',
@@ -26,6 +37,7 @@ interface Bet {
 export class MainPage implements OnInit, OnDestroy {
     tw: TronWeb;
     subs: Subscription;
+    firestoreSubs: Subscription;
     hash: string;
     block: any;
     questionL = null;
@@ -33,16 +45,19 @@ export class MainPage implements OnInit, OnDestroy {
     selectedValue : string;
     btnDisabled = true;
     inputValue: string;
+    inputName: string;
     deliveryData: DataFormat[] = [{hash: 'hash...', height: 'height', time: 'time'}];
     bet: Bet;
     leftImage = '';
     rightImage = '';
     bgImage = 'gamble.png';
     handCoinImage = '../../../assets/hand_coin.png';
+    account = 1000;
   constructor(
     private dataService: DatafeedService,
     private toastCtrl: ToastController,
-    private menu: MenuController
+    private menu: MenuController,
+    private betData: BetdataService
   ) {
     this.tw = new TronWeb({
         fullHost: 'https://api.trongrid.io',
@@ -52,6 +67,7 @@ export class MainPage implements OnInit, OnDestroy {
    }
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    this.firestoreSubs.unsubscribe();
   }
 
   ngOnInit() {
@@ -78,21 +94,41 @@ export class MainPage implements OnInit, OnDestroy {
   }
   evaluate(block) {
     this.bet.which === 'left'
-    ? block.hash.slice(2, 3) < 8
-      ? this.presentToast('your bet succeeds')
-      : this.presentToast('your bet failed')
-    : block.hash.slice(2, 3) > 7
-      ? this.presentToast('your bet succeeds')
-      : this.presentToast('your bet was failed');
+    ? parseInt(block.hash.slice(2, 3), 16) < 8
+      ? this.win()
+      : this.lose()
+    : parseInt(block.hash.slice(2, 3), 16) > 7
+      ? this.win()
+      : this.lose();
+  }
+  win() {
+    this.firestoreSubs = this.betData.getData(this.block.number).subscribe(data => {
+      const result = data.reduce<any>((acc: any, c: any) => {
+        acc.idx += 1;
+        acc.sum += c.value;
+        return acc;
+      }, {sum: 0, idx: 0});
+      const winners: number = data.filter((v: any) => v.which === this.bet.which).reduce<number>((acc: number, c) => acc += 1, 0);
+      console.log(`%c reward => `, 'color: #ff0000', result.sum / winners, winners);
+      this.account += result.sum / winners;
+    });
+    this.presentToast('your bet succeeds');
+  }
+  lose() {
+    this.presentToast('your bet was failed');
   }
   onSubmit() {
     const heightNum = parseInt(this.deliveryData[this.deliveryData.length - 1].number, 10) + 1;
     console.log('submitted : ', this.selectedValue, this.inputValue, heightNum);
+    const betValue = parseInt(this.inputValue, 10);
     this.bet = {
       which: this.selectedValue,
-      value: parseInt(this.inputValue, 10),
-      height: heightNum
+      value: betValue,
+      height: heightNum,
+      name: this.inputName
     };
+    this.account -= betValue;
+    this.betData.addData(this.bet);
     this.presentToast(`you bet ${this.selectedValue}, amount of ${this.inputValue} on the hash height of ${heightNum}`);
   }
   onClick(e) {
