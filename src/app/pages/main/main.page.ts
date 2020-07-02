@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import TronWeb from 'tronweb';
 import {log} from '../../../utils/utils';
 import {DatafeedService} from '../../services/datafeed.service';
-import {Subscription, interval, of, from} from 'rxjs';
+import {Subscription, interval, of, from, Observable} from 'rxjs';
+import { take } from 'rxjs/operators';
 import { ToastController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
 import { BetdataService } from 'src/app/services/betdata.service';
@@ -37,6 +38,7 @@ const observer =  {
 export class MainPage implements OnInit, OnDestroy {
     tw: TronWeb;
     subs: Subscription;
+    userDataObs$: Observable<any>;
     firestoreSubs: Subscription;
     hash: string;
     block: any;
@@ -45,7 +47,7 @@ export class MainPage implements OnInit, OnDestroy {
     selectedValue : string;
     btnDisabled = true;
     inputValue: string;
-    inputName: string;
+    inputName = "lim";
     deliveryData: DataFormat[] = [{hash: 'hash...', height: 'height', time: 'time'}];
     bet: Bet;
     leftImage = '';
@@ -53,6 +55,7 @@ export class MainPage implements OnInit, OnDestroy {
     bgImage = 'gamble.png';
     handCoinImage = '../../../assets/hand_coin.png';
     account = 1000;
+    betHistory: any;
   constructor(
     private dataService: DatafeedService,
     private toastCtrl: ToastController,
@@ -74,6 +77,7 @@ export class MainPage implements OnInit, OnDestroy {
     log('Tron Trx')(this.tw.trx);
     log('Hex Address')(this.tw.address.toHex('TNq1zwWDPAQEw37NJhbaWrNZ79kJKa7ojS'));
     log('Hex Address to String')(this.tw.address.fromHex('418d0d1f9a90cb4e5aeb9de7e2650183cf9626f140'));
+    this.userDataObs$ = this.betData.getUserData(this.inputName);
     this.subs = this.dataService.getData().subscribe((v) => {
       console.log(v);
       this.block = v;
@@ -102,7 +106,7 @@ export class MainPage implements OnInit, OnDestroy {
       : this.lose();
   }
   win() {
-    this.firestoreSubs = this.betData.getData(this.block.number).subscribe(data => {
+    this.firestoreSubs = this.betData.getData(this.block.number).pipe(take(1)).subscribe(data => {
       const result = data.reduce<any>((acc: any, c: any) => {
         acc.idx += 1;
         acc.sum += c.value;

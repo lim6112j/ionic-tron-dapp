@@ -12,9 +12,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { ReversePipe } from './pipe/reverse.pipe';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ReversePipe],
   entryComponents: [],
   imports: [
     BrowserModule,

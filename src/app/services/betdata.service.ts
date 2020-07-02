@@ -23,4 +23,7 @@ export class BetdataService {
   getData(height) {
     return this.fire.collection('bet', ref => ref.where('height', '==', height)).valueChanges();
   }
+  getUserData(name) {
+    return this.fire.collection('bet', ref => ref.where('name', '==', name)).valueChanges();
+  }
 }
