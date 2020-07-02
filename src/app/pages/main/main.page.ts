@@ -47,7 +47,7 @@ export class MainPage implements OnInit, OnDestroy {
     selectedValue : string;
     btnDisabled = true;
     inputValue: string;
-    inputName = "lim";
+    inputName = 'lim';
     deliveryData: DataFormat[] = [{hash: 'hash...', height: 'height', time: 'time'}];
     bet: Bet;
     leftImage = '';
@@ -56,6 +56,7 @@ export class MainPage implements OnInit, OnDestroy {
     handCoinImage = '../../../assets/hand_coin.png';
     account = 1000;
     betHistory: any;
+    testStr = 'sdljfoijsdf  osdjfosijdfojdf';
   constructor(
     private dataService: DatafeedService,
     private toastCtrl: ToastController,

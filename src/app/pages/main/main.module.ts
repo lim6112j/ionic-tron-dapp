@@ -8,7 +8,7 @@ import { MainPageRoutingModule } from './main-routing.module';
 
 import { MainPage } from './main.page';
 import TronWeb from 'tronweb';
-
+import { ShortenPipe } from '../../pipe/shorten.pipe';
 @NgModule({
   imports: [
     CommonModule,
@@ -16,9 +16,10 @@ import TronWeb from 'tronweb';
     IonicModule,
     MainPageRoutingModule
   ],
+  exports: [ShortenPipe],
   providers: [
     TronWeb,
   ],
-  declarations: [MainPage]
+  declarations: [MainPage, ShortenPipe]
 })
 export class MainPageModule {}
