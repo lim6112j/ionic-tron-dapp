@@ -39,6 +39,7 @@ export class MainPage implements OnInit, OnDestroy {
     tw: TronWeb;
     subs: Subscription;
     userDataObs$: Observable<any>;
+    userDataSubs: Subscription;
     firestoreSubs: Subscription;
     hash: string;
     block: any;
@@ -72,6 +73,7 @@ export class MainPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subs.unsubscribe();
     this.firestoreSubs.unsubscribe();
+    this.userDataSubs.unsubscribe();
   }
 
   ngOnInit() {
@@ -79,6 +81,7 @@ export class MainPage implements OnInit, OnDestroy {
     log('Hex Address')(this.tw.address.toHex('TNq1zwWDPAQEw37NJhbaWrNZ79kJKa7ojS'));
     log('Hex Address to String')(this.tw.address.fromHex('418d0d1f9a90cb4e5aeb9de7e2650183cf9626f140'));
     this.userDataObs$ = this.betData.getUserData(this.inputName);
+    this.userDataSubs = this.userDataObs$.subscribe(console.log);
     this.subs = this.dataService.getData().subscribe((v) => {
       console.log(v);
       this.block = v;

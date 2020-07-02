@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, take, map} from 'rxjs/operators';
 const log = (msg) => (v) => console.log(`%c[${msg}] => [${v}]`, 'color: #0beb43');
+interface Sortable {
+  height: number;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -24,6 +27,6 @@ export class BetdataService {
     return this.fire.collection('bet', ref => ref.where('height', '==', height)).valueChanges();
   }
   getUserData(name) {
-    return this.fire.collection('bet', ref => ref.where('name', '==', name)).valueChanges();
+    return this.fire.collection<Sortable>('bet', ref => ref.where('name', '==', name).orderBy('height', 'desc').limit(6)).valueChanges({idField: 'id'});
   }
 }
