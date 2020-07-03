@@ -141,6 +141,11 @@ export class MainPage implements OnInit, OnDestroy {
   }
   onSubmit() {
     const heightNum = parseInt(this.deliveryData[this.deliveryData.length - 1].number, 10) + 1;
+    if (this.bet && this.bet.height === heightNum) {
+      console.log(`you already bet on the ${heightNum} block`);
+      this.presentToast('You can not bet on the same block twice');
+      return;
+    }
     console.log('submitted : ', this.selectedValue, this.inputValue, heightNum);
     const betValue = parseInt(this.inputValue, 10);
     if (this.account >= betValue) {

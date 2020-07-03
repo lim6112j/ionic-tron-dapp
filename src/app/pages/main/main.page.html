@@ -94,7 +94,7 @@
         <ion-row>
           <ion-col>
             <ion-item *ngFor="let item of (userDataObs$ | async)" color="success" textWrap>
-              {{item.result ? item.result: 'Betting'}} - {{item.account}} - {{item.height}} - {{ item.which}} - {{item.value}}
+              {{item.result ? item.result: 'Betting'}} - {{item.account}} - {{item.height}} - {{ item.which === 'right' ? 'Up' : 'Down'}} - {{item.value}}
             </ion-item> 
           </ion-col>
         </ion-row>
@@ -107,7 +107,7 @@
             Ethereum Block Hash
           </ion-label>
         </ion-item-divider>
-        <ion-item *ngFor="let item of deliveryData.slice().reverse()" textWrap>
+        <ion-item *ngFor="let item of deliveryData.slice().reverse()" color="warning" textWrap>
           {{ item.timestamp * 1000 | date: 'hh:mm:ss' }} - {{item.number}} - {{item.hash}}
         </ion-item>
       </ion-col>

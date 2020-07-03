@@ -39,7 +39,7 @@ export class BetdataService {
   }
   getUserData(name) {
     return this.fire.collection<Sortable>('bet', ref => ref.where('name', '==', name)
-    .orderBy('height', 'desc').limit(6)).valueChanges({idField: 'id'});
+    .orderBy('height', 'desc').limit(5)).valueChanges({idField: 'id'});
   }
   updateUserData(id, data) {
     this.fire.collection('bet').doc(id).update(data)
