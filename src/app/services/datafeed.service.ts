@@ -27,7 +27,7 @@ export class DatafeedService {
   constructor(
     private http: HttpClient
   ) { }
-  getData() {
+  getEthLatestBlock() {
     // return this.http.get(this.apiurl);
     web3.eth.getBlockNumber().then(v => console.log(v));
     return interval(3000).pipe(
@@ -36,9 +36,9 @@ export class DatafeedService {
       distinctUntilChanged((prev, curr) => prev.hash === curr.hash),
       // tap(console.log),
     );
-    from(web3.eth.getBlockNumber().then(v => v)).pipe(
+    // from(web3.eth.getBlockNumber().then(v => v)).pipe(
 
-    )
+    // )
     // return interval(15000).pipe(
     //   flatMap(v => this.http.get(this.apiurl)),
     //   distinctUntilChanged((prev: DataFormat, curr: DataFormat) => prev.hash === curr.hash)

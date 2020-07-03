@@ -15,10 +15,12 @@ interface DataFormat {
   number?: string;
 }
 interface Bet {
+  id?: string;
   which: string;
   value: number;
   height: number;
   name: string;
+  account: number;
 }
 const observer =  {
     next: function(data: any) {
@@ -37,10 +39,10 @@ const observer =  {
 })
 export class MainPage implements OnInit, OnDestroy {
     tw: TronWeb;
-    subs: Subscription;
+    latestBlockSubs: Subscription;
     userDataObs$: Observable<any>;
     userDataSubs: Subscription;
-    firestoreSubs: Subscription;
+    heightDataSubs: Subscription;
     hash: string;
     block: any;
     questionL = null;
@@ -48,8 +50,9 @@ export class MainPage implements OnInit, OnDestroy {
     selectedValue : string;
     btnDisabled = true;
     inputValue: string;
-    inputName = 'lim';
+    inputName = '';
     deliveryData: DataFormat[] = [{hash: 'hash...', height: 'height', time: 'time'}];
+    userData: Bet[];
     bet: Bet;
     leftImage = '';
     rightImage = '';
@@ -71,8 +74,8 @@ export class MainPage implements OnInit, OnDestroy {
     this.menu.enable(false);
    }
   ngOnDestroy(): void {
-    this.subs.unsubscribe();
-    this.firestoreSubs.unsubscribe();
+    this.latestBlockSubs.unsubscribe();
+    this.heightDataSubs.unsubscribe();
     this.userDataSubs.unsubscribe();
   }
 
@@ -80,9 +83,13 @@ export class MainPage implements OnInit, OnDestroy {
     log('Tron Trx')(this.tw.trx);
     log('Hex Address')(this.tw.address.toHex('TNq1zwWDPAQEw37NJhbaWrNZ79kJKa7ojS'));
     log('Hex Address to String')(this.tw.address.fromHex('418d0d1f9a90cb4e5aeb9de7e2650183cf9626f140'));
+    this.inputName = 'User-' + Math.round(Math.random() * 100).toString();
     this.userDataObs$ = this.betData.getUserData(this.inputName);
-    this.userDataSubs = this.userDataObs$.subscribe(console.log);
-    this.subs = this.dataService.getData().subscribe((v) => {
+    this.userDataSubs = this.userDataObs$.subscribe(v => {
+      log('userData from firebase ')(v);
+      this.userData = v;
+    });
+    this.latestBlockSubs = this.dataService.getEthLatestBlock().subscribe((v) => {
       console.log(v);
       this.block = v;
       this.winOrLose(this.block);
@@ -94,48 +101,54 @@ export class MainPage implements OnInit, OnDestroy {
     });
   }
   winOrLose(block) {
-    (this.bet && this.bet.height) === this.block.number
+    (this.bet && this.bet.height) === block.number
     ? this.bet.which
-      ?  this.evaluate(this.block)
+      ?  this.evaluate(block)
       : console.log('bet is not determined')
     : console.log('not betted');
   }
   evaluate(block) {
     this.bet.which === 'left'
     ? parseInt(block.hash.slice(2, 3), 16) < 8
-      ? this.win()
-      : this.lose()
+      ? this.win(block)
+      : this.lose(block)
     : parseInt(block.hash.slice(2, 3), 16) > 7
-      ? this.win()
-      : this.lose();
+      ? this.win(block)
+      : this.lose(block);
   }
-  win() {
-    this.firestoreSubs = this.betData.getData(this.block.number).pipe(take(1)).subscribe(data => {
-      const result = data.reduce<any>((acc: any, c: any) => {
+  win(block) {
+    const currentUserBet = this.userData.filter(v => v.height === block.number);
+    this.heightDataSubs = this.betData.getHeightData(block.number).subscribe(data => {
+      console.log('heightdata => ');
+      console.log(data);
+      const result = data.reduce((acc: any, c: any) => {
         acc.idx += 1;
         acc.sum += c.value;
         return acc;
       }, {sum: 0, idx: 0});
-      const winners: number = data.filter((v: any) => v.which === this.bet.which).reduce<number>((acc: number, c) => acc += 1, 0);
+      const winners: number = data.filter((v: any) => v.which === this.bet.which).reduce((acc: number, c) => acc += 1, 0);
       console.log(`%c reward => `, 'color: #ff0000', result.sum / winners, winners);
       this.account += result.sum / winners;
+      // this.betData.addData({...this.bet, account: this.account});
     });
     this.presentToast('your bet succeeds');
   }
-  lose() {
+  lose(block) {
     this.presentToast('your bet was failed');
   }
   onSubmit() {
     const heightNum = parseInt(this.deliveryData[this.deliveryData.length - 1].number, 10) + 1;
     console.log('submitted : ', this.selectedValue, this.inputValue, heightNum);
     const betValue = parseInt(this.inputValue, 10);
+    this.account -= betValue;
+
     this.bet = {
       which: this.selectedValue,
       value: betValue,
       height: heightNum,
-      name: this.inputName
+      name: this.inputName,
+      account: this.account
     };
-    this.account -= betValue;
     this.betData.addData(this.bet);
     this.presentToast(`you bet ${this.selectedValue}, amount of ${this.inputValue} on the hash height of ${heightNum}`);
   }
