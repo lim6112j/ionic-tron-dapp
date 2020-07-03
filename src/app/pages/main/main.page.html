@@ -27,7 +27,7 @@
             </ion-card-title>
           </ion-card-header>
           <ion-card-content>
-          Predict the first num of each block hash (0 ~ F), 0~7 is 'LOW', 8~F is 'HIGH', Click up, down 
+          Predict the first num of each block hash (0x0 ~ 0xF), 0x0~0x7 is 'LOW', 0x8~0xF is 'HIGH', Click up, down and Input bet value.
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -107,8 +107,8 @@
             Ethereum Block Hash
           </ion-label>
         </ion-item-divider>
-        <ion-item *ngFor="let item of deliveryData.slice().reverse()" color="warning" textWrap>
-          {{ item.timestamp * 1000 | date: 'hh:mm:ss' }} - {{item.number}} - {{item.hash}}
+        <ion-item *ngFor="let item of deliveryData.slice().reverse()" color="warning">
+          {{ item.timestamp * 1000 | date: 'hh:mm:ss' }} - {{item.number}} - {{item.hash | shorten: 12}}
         </ion-item>
       </ion-col>
     </ion-row>
