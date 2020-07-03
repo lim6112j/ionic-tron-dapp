@@ -129,29 +129,35 @@ export class MainPage implements OnInit, OnDestroy {
       const winners: number = data.filter((v: any) => v.which === this.bet.which).reduce((acc: number, c) => acc += 1, 0);
       console.log(`%c reward => `, 'color: #ff0000', result.sum / winners, winners);
       this.account += result.sum / winners;
-      // this.betData.addData({...this.bet, account: this.account});
+      this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Win'});
       this.heightDataSubs.unsubscribe();
     });
     this.presentToast('your bet succeeds');
   }
   lose(block) {
+    const currentUserBet = this.userData.filter(v => v.height === block.number);
+    this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Lose'});
     this.presentToast('your bet was failed');
   }
   onSubmit() {
     const heightNum = parseInt(this.deliveryData[this.deliveryData.length - 1].number, 10) + 1;
     console.log('submitted : ', this.selectedValue, this.inputValue, heightNum);
     const betValue = parseInt(this.inputValue, 10);
-    this.account -= betValue;
+    if (this.account >= betValue) {
+      this.account -= betValue;
+      this.bet = {
+        which: this.selectedValue,
+        value: betValue,
+        height: heightNum,
+        name: this.inputName,
+        account: this.account
+      };
+      this.betData.addData(this.bet);
+      this.presentToast(`you bet ${this.selectedValue}, amount of ${this.inputValue} on the hash height of ${heightNum}`);
+    } else {
+      this.presentToast(`You don't have enough points to bet`);
+    }
 
-    this.bet = {
-      which: this.selectedValue,
-      value: betValue,
-      height: heightNum,
-      name: this.inputName,
-      account: this.account
-    };
-    this.betData.addData(this.bet);
-    this.presentToast(`you bet ${this.selectedValue}, amount of ${this.inputValue} on the hash height of ${heightNum}`);
   }
   onClick(e) {
     //   console.log(`%c${e.target}`, 'color: red');

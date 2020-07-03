@@ -93,8 +93,8 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-item *ngFor="let item of (userDataObs$ | async)" textWrap>
-              {{item.account}} - {{ item.name }} - {{item.height}} - {{ item.which}} - {{item.value}}
+            <ion-item *ngFor="let item of (userDataObs$ | async)" color="success" textWrap>
+              {{item.result ? item.result: 'Betting'}} - {{item.account}} - {{item.height}} - {{ item.which}} - {{item.value}}
             </ion-item> 
           </ion-col>
         </ion-row>
