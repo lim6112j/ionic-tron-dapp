@@ -25,7 +25,17 @@ export class BetdataService {
   }
   getHeightData(height: number) {
     return this.fire.collection('bet', ref => ref.where('height', '==', height))
-    .valueChanges({idField: 'id'}).pipe(skip(1));
+    .get({source: 'server'}).pipe(
+      map(snapshot => {
+          let items = [];
+          snapshot.docs.map(a => {
+              const data = a.data();
+              const id = a.id;
+              items.push({ id, ...data })
+          })
+          return items
+      }),
+  );
   }
   getUserData(name) {
     return this.fire.collection<Sortable>('bet', ref => ref.where('name', '==', name)
