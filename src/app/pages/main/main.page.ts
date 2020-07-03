@@ -118,7 +118,9 @@ export class MainPage implements OnInit, OnDestroy {
   }
   win(block) {
     const currentUserBet = this.userData.filter(v => v.height === block.number);
+    let obsFed = false;
     this.heightDataSubs = this.betData.getHeightData(block.number).subscribe(data => {
+      obsFed = true;
       console.log('heightdata => ');
       console.log(data);
       const result = data.reduce((acc: any, c: any) => {
@@ -128,9 +130,11 @@ export class MainPage implements OnInit, OnDestroy {
       }, {sum: 0, idx: 0});
       const winners: number = data.filter((v: any) => v.which === this.bet.which).reduce((acc: number, c) => acc += 1, 0);
       console.log(`%c reward => `, 'color: #ff0000', result.sum / winners, winners);
-      this.account += result.sum / winners;
+      this.account += result.sum / winners - this.bet.value;
       // this.betData.addData({...this.bet, account: this.account});
+      this.heightDataSubs.unsubscribe();
     });
+    obsFed ? console.log('observable user data fed') : this.account += this.bet.value;
     this.presentToast('your bet succeeds');
   }
   lose(block) {
