@@ -8,4 +8,7 @@ export const environment = {
     storageBucket: "license-delivery.appspot.com",
     messagingSenderId: "409148924422"
   },
+  clesson: {
+    url: 'https://yesang.today/clesson/'
+  }
 };

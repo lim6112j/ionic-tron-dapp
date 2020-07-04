@@ -12,6 +12,9 @@ export const environment = {
     storageBucket: "license-delivery.appspot.com",
     messagingSenderId: "409148924422"
   },
+  clesson: {
+    url: 'http://3.34.124.190:8545'
+  }
 };
 
 /*

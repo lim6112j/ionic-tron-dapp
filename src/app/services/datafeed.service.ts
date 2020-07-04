@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, interval, from } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { map, flatMap, distinctUntilChanged, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import Web3 from 'web3';
 interface DataFormat {
   hash: string;
@@ -15,7 +16,7 @@ const OPTIONS = {
 };
 // const web3 = new Web3(new Web3.providers.HttpProvider('http://15.164.229.155:8545'), null, OPTIONS);
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://blockchain.defora.io'), null, OPTIONS);
-const web3 = new Web3(new Web3.providers.HttpProvider('http://3.34.124.190:8545'), null); // Clesson
+const web3 = new Web3(new Web3.providers.HttpProvider(environment.clesson.url), null); // Clesson
 @Injectable({
   providedIn: 'root'
 })
