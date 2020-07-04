@@ -58,7 +58,7 @@ export class MainPage implements OnInit, OnDestroy {
     rightImage = '';
     bgImage = 'gamble.png';
     handCoinImage = '../../../assets/hand_coin.png';
-    account = 1000;
+    account = 1000000;
     betHistory: any;
     testStr = 'sdljfoijsdf  osdjfosijdfojdf';
   constructor(
