@@ -15,15 +15,15 @@ export class AppComponent implements OnInit {
     {
       title: 'Ethereum',
       url: 'main',
-      icon: 'paper-plane'
+      icon: 'cash'
     },
     {
       title: 'Goods',
       url: 'goods',
-      icon: 'mail'
+      icon: 'basket'
     }
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+  public labels = ['Ethereum', 'Oil', 'Stock', 'Weather', 'Goods'];
 
   constructor(
     private platform: Platform,

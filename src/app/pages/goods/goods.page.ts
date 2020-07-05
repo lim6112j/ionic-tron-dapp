@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./goods.page.scss'],
 })
 export class GoodsPage implements OnInit {
+  handCoinImage = '../../../assets/crude-oil-wiki.jpg';
 
   constructor() { }
 

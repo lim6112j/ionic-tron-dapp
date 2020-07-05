@@ -8,8 +8,24 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div id="container">
-    <strong class="capitalize">Goods</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-img [src] = "handCoinImage"></ion-img>
+          <ion-card-header>
+            <ion-card-subtitle>
+              Predict Any In the World
+            </ion-card-subtitle>
+            <ion-card-title>
+              Instruction
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+          Predict the daily price of crude oil comparing previous day price.  'LOW', 'HIGH', Click up, down and Input bet value.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
