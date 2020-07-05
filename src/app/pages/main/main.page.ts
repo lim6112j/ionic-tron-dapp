@@ -71,12 +71,12 @@ export class MainPage implements OnInit, OnDestroy {
         fullHost: 'https://api.trongrid.io',
         privateKey: 'f21841659a7efc2f5a6d579724c6134fefd28cf013a261d39c9a1c232f10ec04',
     });
-    this.menu.enable(false);
+    this.menu.enable(true);
    }
   ngOnDestroy(): void {
-    this.latestBlockSubs.unsubscribe();
-    this.heightDataSubs.unsubscribe();
-    this.userDataSubs.unsubscribe();
+    this.latestBlockSubs ? this.latestBlockSubs.unsubscribe() : console.log('latestBlockSubs is Null');
+    this.heightDataSubs ? this.heightDataSubs.unsubscribe() : console.log('heightDataSubs is Null');
+    this.userDataSubs ? this.userDataSubs.unsubscribe() : console.log('userDataSubs is Null');
   }
 
   ngOnInit() {
