@@ -51,7 +51,7 @@ export class MainPage implements OnInit, OnDestroy {
     btnDisabled = true;
     inputValue: string;
     inputName = '';
-    deliveryData: DataFormat[] = [{hash: 'hash...', height: 'height', time: 'time'}];
+    deliveryData: DataFormat[] = [{hash: '', height: 'height', time: 'time'}];
     userData: Bet[];
     bet: Bet;
     leftImage = '';
