@@ -7,6 +7,8 @@ import { take } from 'rxjs/operators';
 import { ToastController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
 import { BetdataService } from 'src/app/services/betdata.service';
+import { AngularFireMessaging } from '@angular/fire/messaging';
+
 interface DataFormat {
   hash: string;
   height?: string;
@@ -65,7 +67,8 @@ export class MainPage implements OnInit, OnDestroy {
     private dataService: DatafeedService,
     private toastCtrl: ToastController,
     private menu: MenuController,
-    private betData: BetdataService
+    private betData: BetdataService,
+    private afMessaging: AngularFireMessaging
   ) {
     this.tw = new TronWeb({
         fullHost: 'https://api.trongrid.io',
@@ -206,5 +209,17 @@ export class MainPage implements OnInit, OnDestroy {
     }
     return s2() + '-' + s2() + '-' + s2();
     // return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+  requestPushNotificationsPermission() {
+    console.log('requestPushNotificationsPermission');
+    this.afMessaging.requestToken // getting tokens
+    .subscribe(
+      (token) => { // USER-REQUESTED-TOKEN
+        console.log('Permission granted! Save to the server!', token);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 }

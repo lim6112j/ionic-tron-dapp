@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
@@ -25,7 +26,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    AngularFireMessagingModule,
+    ServiceWorkerModule.register('combined-sw.js', { enabled: environment.production })
   ],
   providers: [
     StatusBar,

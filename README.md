@@ -1,6 +1,8 @@
 # ionic-tron-dapp
 * 참조 : https://developers.tron.network/docs/tron-web-intro, https://developers.tron.network/reference#address
 
+# pwa push notification
+* [push notification on pwa](https://medium.com/@AnkitMaheshwariIn/adding-push-notifications-to-progressive-web-app-pwa-with-ionic-4-and-firebase-hosting-e31784427f34)
 # how to build and run nginx server
 * should build production option for nginx server
 

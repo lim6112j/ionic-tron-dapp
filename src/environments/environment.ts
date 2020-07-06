@@ -10,6 +10,7 @@ export const environment = {
     databaseURL: "https://license-delivery.firebaseio.com",
     projectId: "license-delivery",
     storageBucket: "license-delivery.appspot.com",
+    appId: "1:409148924422:web:0d2d033467c23de1bfd987",
     messagingSenderId: "409148924422"
   },
   clesson: {
