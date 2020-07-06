@@ -8,6 +8,7 @@ import { ToastController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
 import { BetdataService } from 'src/app/services/betdata.service';
 import { AngularFireMessaging } from '@angular/fire/messaging';
+import { Platform } from '@ionic/angular';
 
 interface DataFormat {
   hash: string;
@@ -64,12 +65,14 @@ export class MainPage implements OnInit, OnDestroy {
     betHistory: any;
     testStr = 'sdljfoijsdf  osdjfosijdfojdf';
     userRequestedToken = '';
+    isIOS: boolean;
   constructor(
     private dataService: DatafeedService,
     private toastCtrl: ToastController,
     private menu: MenuController,
     private betData: BetdataService,
-    private afMessaging: AngularFireMessaging
+    private afMessaging: AngularFireMessaging,
+    private platform: Platform
   ) {
     this.tw = new TronWeb({
         fullHost: 'https://api.trongrid.io',
@@ -84,6 +87,7 @@ export class MainPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.isIOS = this.platform.is('ios');
     log('Tron Trx')(this.tw.trx);
     log('Hex Address')(this.tw.address.toHex('TNq1zwWDPAQEw37NJhbaWrNZ79kJKa7ojS'));
     log('Hex Address to String')(this.tw.address.fromHex('418d0d1f9a90cb4e5aeb9de7e2650183cf9626f140'));

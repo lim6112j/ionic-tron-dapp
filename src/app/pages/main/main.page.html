@@ -183,7 +183,7 @@
         </ion-row>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="!isIOS">
       <ion-col>
         <ion-card>
           <ion-button (click)="requestPushNotificationsPermission()">
