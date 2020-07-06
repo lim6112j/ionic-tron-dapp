@@ -14,3 +14,62 @@ tar -cvf www.tgz ./www
 * tar -xvf www.tgz
 * cp -rf ./www/* /var/nginx/yesang.today/html/
 
+# nginx config
+
+```
+server {
+
+        root /var/www/yesang.today/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name yesang.today www.yesang.today;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+
+	location /clesson/ {
+		proxy_pass http://3.34.124.190:8545;
+	}
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/yesang.today/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/yesang.today/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+server {
+    if ($host = www.yesang.today) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = yesang.today) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+
+        listen 80;
+        listen [::]:80;
+
+        server_name yesang.today www.yesang.today;
+    return 404; # managed by Certbot
+
+
+#        listen 80;
+#        listen [::]:80;
+
+#        root /var/www/yesang.today/html;
+#        index index.html index.htm index.nginx-debian.html;
+
+#        server_name yesang.today www.yesang.today;
+
+#        location / {
+#                try_files $uri $uri/ =404;
+#        }
+
+}
+```
