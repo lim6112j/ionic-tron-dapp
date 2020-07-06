@@ -27,5 +27,114 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-grid>
+          <ion-row>
+
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label position="floating">who are you?</ion-label>
+                <ion-input [(ngModel)]="inputName"></ion-input> 
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item class="ion-text-center">
+                <ion-label>Account : {{this.account}}</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-item id="left" (click)="onClick($event)" [ngClass]="questionL" button>
+                <ion-item-group class="ion-text-center">
+                  <ion-label><ion-icon name="thumbs-down-outline"></ion-icon> Down</ion-label>
+                </ion-item-group>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6">
+              <ion-item id="right"  (click)="onClick($event)" [ngClass]="questionR" button>
+                <ion-item-group class="ion-text-center">
+                  <ion-label class="pointer-events: none"><ion-icon name="thumbs-up-outline"></ion-icon> Up</ion-label>
+                </ion-item-group>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label position="floating">how much will you bet?</ion-label>
+                <ion-input [(ngModel)]="inputValue"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button [disabled]="btnDisabled" (click)="onSubmit()" expand="block">Bet !!!</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </ion-col>
+      <ion-col size="12" size-md="6">
+        <ion-row>
+          <ion-col size="12">
+            <ion-item>Your Bet History</ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-row>
+              <ion-col size="2">
+                Result
+              </ion-col>
+              <ion-col size="3">
+                Account
+              </ion-col>
+              <ion-col size="3">
+                Height
+              </ion-col>
+              <ion-col size="2">
+                Bet
+              </ion-col>
+              <ion-col size="2">
+                Value
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let item of (userDataObs$ | async)">
+              <ion-col size="2">
+                <ion-text color="success">
+                  {{item.result ? item.result: 'Bet'}} 
+                </ion-text>
+              </ion-col>
+              <ion-col size="3">
+                <ion-text color="success">
+                  {{item.account}}
+                </ion-text>
+              </ion-col>
+              <ion-col size="3">
+                <ion-text color="success">
+                  {{item.height}}
+                </ion-text>
+              </ion-col>
+              <ion-col size="2">
+                <ion-text color="success">
+                  {{ item.which === 'right' ? 'Up' : 'Down'}}
+                </ion-text>
+              </ion-col>
+              <ion-col size="2">
+                <ion-text color="success">
+                  {{item.value}}
+                </ion-text>
+              </ion-col> 
+            </ion-row> 
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>

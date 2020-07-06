@@ -128,7 +128,7 @@ export class MainPage implements OnInit, OnDestroy {
       }, {sum: 0, idx: 0});
       const winners: number = data.filter((v: any) => v.which === this.bet.which).reduce((acc: number, c) => acc += 1, 0);
       console.log(`%c reward => `, 'color: #ff0000', result.sum / winners, winners);
-      this.account += result.sum / winners;
+      result.idx !== 1 ? this.account += result.sum / winners : this.account += result.sum * 2;
       this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Win'});
       this.heightDataSubs.unsubscribe();
     });
