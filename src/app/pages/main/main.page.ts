@@ -168,14 +168,16 @@ export class MainPage implements OnInit, OnDestroy {
     }
 
   }
-  onClick(e) {
-    //   console.log(`%c${e.target}`, 'color: red');
+  onClickLeft(e) {
+    console.log(`%c${e.target}`, 'color: red');
     console.log(e);
-    e.target.id === null ? console.log('no target')
-    : e.target.id === 'left' ? this.setClass('left')
-    : e.target.id === 'right' ? this.setClass('right')
-    : console.log('id not matched');
+    this.setClass('left')
   }
+  onClickRight(e) {
+    console.log(`%c${e.target}`, 'color: red');
+    console.log(e);
+    this.setClass('right')
+  } 
   setClass(prop: string) {
     if (prop === 'right') {
       this.selectedValue = 'right';
