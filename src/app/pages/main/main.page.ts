@@ -63,6 +63,7 @@ export class MainPage implements OnInit, OnDestroy {
     account = 1000000;
     betHistory: any;
     testStr = 'sdljfoijsdf  osdjfosijdfojdf';
+    userRequestedToken = '';
   constructor(
     private dataService: DatafeedService,
     private toastCtrl: ToastController,
@@ -216,6 +217,7 @@ export class MainPage implements OnInit, OnDestroy {
     .subscribe(
       (token) => { // USER-REQUESTED-TOKEN
         console.log('Permission granted! Save to the server!', token);
+        this.userRequestedToken = token;
       },
       (error) => {
         console.error(error);
