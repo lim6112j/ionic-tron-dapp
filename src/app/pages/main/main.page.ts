@@ -221,6 +221,7 @@ export class MainPage implements OnInit, OnDestroy {
       },
       (error) => {
         console.error(error);
+        this.presentToast('unable to get notification permission');
       }
     );
   }
