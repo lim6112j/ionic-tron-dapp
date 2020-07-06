@@ -83,7 +83,7 @@ export class MainPage implements OnInit, OnDestroy {
     log('Tron Trx')(this.tw.trx);
     log('Hex Address')(this.tw.address.toHex('TNq1zwWDPAQEw37NJhbaWrNZ79kJKa7ojS'));
     log('Hex Address to String')(this.tw.address.fromHex('418d0d1f9a90cb4e5aeb9de7e2650183cf9626f140'));
-    this.inputName = 'User-' + Math.round(Math.random() * 100).toString();
+    this.inputName = 'User-' + this.createUuid();
     this.userDataObs$ = this.betData.getUserData(this.inputName);
     this.userDataSubs = this.userDataObs$.subscribe(v => {
       log('userData from firebase ')(v);
@@ -128,7 +128,7 @@ export class MainPage implements OnInit, OnDestroy {
       }, {sum: 0, idx: 0});
       const winners: number = data.filter((v: any) => v.which === this.bet.which).reduce((acc: number, c) => acc += 1, 0);
       console.log(`%c reward => `, 'color: #ff0000', result.sum / winners, winners);
-      result.idx !== 1 ? this.account += result.sum / winners : this.account += result.sum * 2;
+      this.account += result.sum / winners + this.bet.value;
       this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Win'});
       this.heightDataSubs.unsubscribe();
     });
@@ -196,5 +196,15 @@ export class MainPage implements OnInit, OnDestroy {
       duration: 5000
     });
     toastIns.present();
+  }
+  private createUuid(): string {
+    function s2() {
+      return Math.floor((1 + Math.random()) * 0x100).toString(16).substring(1);
+    }
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+    return s2() + '-' + s2() + '-' + s2();
+    // return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 }
