@@ -25,47 +25,37 @@ interface Bet {
   name: string;
   account: number;
 }
-const observer =  {
-    next: function(data: any) {
-      log('Subscription value')(data);
-      this.unsubscribe();
-    },
-    error: log('Subscription Error'),
-    complete: function(){
-      log('completed')(this);
-    }
-  };
 @Component({
-  selector: 'app-main',
-  templateUrl: './main.page.html',
-  styleUrls: ['./main.page.scss'],
+  selector: 'app-multi',
+  templateUrl: './multi.page.html',
+  styleUrls: ['./multi.page.scss'],
 })
-export class MainPage implements OnInit, OnDestroy {
-    tw: TronWeb;
-    latestBlockSubs: Subscription;
-    userDataObs$: Observable<any>;
-    userDataSubs: Subscription;
-    heightDataSubs: Subscription;
-    hash: string;
-    block: any;
-    questionL = null;
-    questionR = null;
-    selectedValue : string;
-    btnDisabled = true;
-    inputValue: string;
-    inputName = '';
-    deliveryData: DataFormat[] = [{hash: '', height: 'height', time: 'time'}];
-    userData: Bet[];
-    bet: Bet;
-    leftImage = '';
-    rightImage = '';
-    bgImage = 'gamble.png';
-    handCoinImage = '../../../assets/hand_coin.png';
-    account = 1000000;
-    betHistory: any;
-    testStr = 'sdljfoijsdf  osdjfosijdfojdf';
-    userRequestedToken = '';
-    isIOS: boolean;
+export class MultiPage implements OnInit, OnDestroy {
+  tw: TronWeb;
+  latestBlockSubs: Subscription;
+  userDataObs$: Observable<any>;
+  userDataSubs: Subscription;
+  heightDataSubs: Subscription;
+  hash: string;
+  block: any;
+  questionL = null;
+  questionR = null;
+  selectedValue : string;
+  btnDisabled = true;
+  inputValue: string;
+  inputName = '';
+  deliveryData: DataFormat[] = [{hash: '', height: 'height', time: 'time'}];
+  userData: Bet[];
+  bet: Bet;
+  leftImage = '';
+  rightImage = '';
+  bgImage = 'gamble.png';
+  handCoinImage = '../../../assets/hand_coin.png';
+  account = 1000000;
+  betHistory: any;
+  testStr = 'sdljfoijsdf  osdjfosijdfojdf';
+  userRequestedToken = '';
+  isIOS: boolean;
   constructor(
     private dataService: DatafeedService,
     private toastCtrl: ToastController,
@@ -75,17 +65,16 @@ export class MainPage implements OnInit, OnDestroy {
     private platform: Platform
   ) {
     this.tw = new TronWeb({
-        fullHost: 'https://api.trongrid.io',
-        privateKey: 'f21841659a7efc2f5a6d579724c6134fefd28cf013a261d39c9a1c232f10ec04',
-    });
+      fullHost: 'https://api.trongrid.io',
+      privateKey: 'f21841659a7efc2f5a6d579724c6134fefd28cf013a261d39c9a1c232f10ec04',
+  });
     this.menu.enable(true);
-   }
+  }
   ngOnDestroy(): void {
     this.latestBlockSubs ? this.latestBlockSubs.unsubscribe() : console.log('latestBlockSubs is Null');
     this.heightDataSubs ? this.heightDataSubs.unsubscribe() : console.log('heightDataSubs is Null');
     this.userDataSubs ? this.userDataSubs.unsubscribe() : console.log('userDataSubs is Null');
   }
-
   ngOnInit() {
     this.isIOS = this.platform.is('ios');
     log('Tron Trx')(this.tw.trx);
@@ -126,13 +115,56 @@ export class MainPage implements OnInit, OnDestroy {
   }
   win(block) {
     const currentUserBet = this.userData.filter(v => v.height === block.number);
-    this.account += this.bet.value * 2;
-    this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Win'});
+    this.heightDataSubs = this.betData.getHeightData(block.number).subscribe(data => {
+      console.log('heightdata => ');
+      console.log(data);
+      const result = data.reduce((acc: any, c: any) => {
+        acc.idx += 1;
+        acc.sum += c.value;
+        return acc;
+      }, {sum: 0, idx: 0});
+      const winners: {acc: number, total: number} = data.filter((v: any) => v.which === this.bet.which).reduce((res, c) => {
+        res.acc += 1;
+        res.total += c.value;
+        return res;
+      }, {acc: 0, total: 0});
+      const losers: number = result.idx - winners.acc;
+      if (losers === 0) {
+        this.account += this.bet.value;
+        this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'draw'});
+      } else {
+        this.account += result.sum / winners.total * this.bet.value;
+        this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Win'});
+      }
+      console.log(`%c reward => `, 'color: #ff0000', result.sum / winners.total * this.bet.value, winners);
+      this.heightDataSubs.unsubscribe();
+    });
     this.presentToast('your bet succeeds');
   }
   lose(block) {
     const currentUserBet = this.userData.filter(v => v.height === block.number);
-    this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Lose'});
+    this.heightDataSubs = this.betData.getHeightData(block.number).subscribe(data => {
+      console.log('heightdata => ');
+      console.log(data);
+      const result = data.reduce((acc: any, c: any) => {
+        acc.idx += 1;
+        acc.sum += c.value;
+        return acc;
+      }, {sum: 0, idx: 0});
+      const losers: {acc: number, total: number} = data.filter((v: any) => v.which !== this.bet.which).reduce((res, c) => {
+        res.acc += 1;
+        res.total += c.value;
+        return res;
+      }, {acc: 0, total: 0});
+      const winners: number = result.idx - losers.acc;
+      if (winners === 0) {
+        this.account += this.bet.value;
+        this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'draw'});
+      } else {
+        this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Lose'});
+      }
+      this.heightDataSubs.unsubscribe();
+    });
     this.presentToast('your bet was failed');
   }
   onSubmit() {

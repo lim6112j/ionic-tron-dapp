@@ -18,6 +18,11 @@ export class AppComponent implements OnInit {
       icon: 'cash'
     },
     {
+      title: 'Multi',
+      url: 'multi',
+      icon: 'cash'
+    },
+    {
       title: 'Goods',
       url: 'goods',
       icon: 'basket'

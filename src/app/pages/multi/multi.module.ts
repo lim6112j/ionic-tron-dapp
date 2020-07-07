@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MainPageRoutingModule } from './main-routing.module';
+import { MultiPageRoutingModule } from './multi-routing.module';
 
-import { MainPage } from './main.page';
+import { MultiPage } from './multi.page';
 import TronWeb from 'tronweb';
 import { PipeModule } from '../../module/pipe/pipe.module';
 @NgModule({
@@ -14,12 +14,12 @@ import { PipeModule } from '../../module/pipe/pipe.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    MainPageRoutingModule,
+    MultiPageRoutingModule,
     PipeModule
   ],
-  providers: [
+    providers: [
     TronWeb,
   ],
-  declarations: [MainPage]
+  declarations: [MultiPage]
 })
-export class MainPageModule {}
+export class MultiPageModule {}

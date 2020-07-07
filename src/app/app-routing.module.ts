@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'goods',
     loadChildren: () => import('./pages/goods/goods.module').then( m => m.GoodsPageModule)
+  },
+  {
+    path: 'multi',
+    loadChildren: () => import('./pages/multi/multi.module').then( m => m.MultiPageModule)
   }
 ];
 

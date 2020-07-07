@@ -26,6 +26,8 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^5.0.0",
     "firebase": "^7.15.5",
+    "ramda": "^0.27.0",
+    "ramda-fantasy": "^0.8.0",
     "rxjs": "~6.5.1",
     "tronweb": "^2.10.2",
     "tslib": "^1.10.0",
