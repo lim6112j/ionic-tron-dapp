@@ -151,7 +151,7 @@ export class MultiPage implements OnInit, OnDestroy {
         acc.sum += c.value;
         return acc;
       }, {sum: 0, idx: 0});
-      const losers: {acc: number, total: number} = data.filter((v: any) => v.which !== this.bet.which).reduce((res, c) => {
+      const losers: {acc: number, total: number} = data.filter((v: any) => v.which === this.bet.which).reduce((res, c) => {
         res.acc += 1;
         res.total += c.value;
         return res;
@@ -163,6 +163,7 @@ export class MultiPage implements OnInit, OnDestroy {
       } else {
         this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Lose'});
       }
+      console.log(`%c reward => `, 'color: #ff0000', result, winners);
       this.heightDataSubs.unsubscribe();
     });
     this.presentToast('your bet was failed');
