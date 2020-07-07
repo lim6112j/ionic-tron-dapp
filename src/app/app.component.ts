@@ -13,12 +13,12 @@ export class AppComponent implements OnInit {
   public selectedIndex = 0;
   public appPages = [
     {
-      title: 'Ethereum',
+      title: 'With Dealer',
       url: 'main',
       icon: 'cash'
     },
     {
-      title: 'Multi',
+      title: 'With Player',
       url: 'multi',
       icon: 'cash'
     },
