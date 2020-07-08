@@ -149,23 +149,17 @@
         </ion-item-divider>
         <ion-row>
           <ion-col size="3">
-            <div class="ion-text-center">
             Time 
-            </div>
           </ion-col>
           <ion-col size="4">
-            <div class="ion-text-center">
               Block Height
-            </div>
           </ion-col>
-          <ion-col size="5" text-center>
-            <div class="ion-text-center">
+          <ion-col size="5" >
               Hash
-            </div>
           </ion-col> 
         </ion-row>
         <ion-row *ngFor="let item of deliveryData.slice().reverse()">
-          <ion-col size="4">
+          <ion-col size="3">
             <ion-text color="primary">
               {{ item.timestamp * 1000 | date: 'hh:mm:ss' }}
             </ion-text>
@@ -175,7 +169,7 @@
               {{item.number}}
             </ion-text>
           </ion-col>
-          <ion-col size="4">
+          <ion-col size="5">
             <ion-text color="primary">
               {{item.hash | shorten: 7}}
             </ion-text>
