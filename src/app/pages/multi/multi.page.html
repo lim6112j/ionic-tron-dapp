@@ -27,8 +27,7 @@
             </ion-card-title>
           </ion-card-header>
           <ion-card-content>
-          Predict the first num of each block hash (0x0 ~ 0xF), 0x0~0x7 is 'LOW', 0x8~0xF is 'HIGH', Click up, down and Input bet value.
-          </ion-card-content>
+            Predict the first num of each block hash (0x0 ~ 0xF), 0x0~0x7 is 'LOW', 0x8~0xF is 'HIGH', Click up, down and Input bet value. Compete with other players except dealers.          </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
@@ -108,6 +107,15 @@
               <ion-col size="2">
                 Value
               </ion-col>
+              <ion-col size="2">
+                Total
+              </ion-col>
+              <ion-col size="3">
+                betters
+              </ion-col>
+              <ion-col size="3">
+                winners
+              </ion-col>
             </ion-row>
             <ion-row *ngFor="let item of (userDataObs$ | async)">
               <ion-col size="2">
@@ -134,7 +142,22 @@
                 <ion-text color="success">
                   {{item.value}}
                 </ion-text>
-              </ion-col> 
+              </ion-col>
+              <ion-col size="2">
+                <ion-text color="success">
+                {{item.totalProfit}}
+                </ion-text>
+              </ion-col>
+              <ion-col size="3">
+                <ion-text color="success">
+                {{item.totalBetters}}
+                </ion-text>
+              </ion-col>
+              <ion-col size="3">
+                <ion-text color="success">
+                {{item.winners}}
+                </ion-text>
+              </ion-col>
             </ion-row> 
           </ion-col>
         </ion-row>

@@ -128,13 +128,21 @@ export class MultiPage implements OnInit, OnDestroy {
         res.total += c.value;
         return res;
       }, {acc: 0, total: 0});
+      const totalProfit = result.sum - winners.total;
       const losers: number = result.idx - winners.acc;
       if (losers === 0) {
         this.account += this.bet.value;
         this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'draw'});
       } else {
         this.account += result.sum / winners.total * this.bet.value;
-        this.betData.updateUserData(currentUserBet[0].id, {...this.bet, account: this.account, result: 'Win'});
+        this.betData.updateUserData(currentUserBet[0].id, {
+          ...this.bet,
+          account: this.account,
+          result: 'Win',
+          totalProfit,
+          winners: winners.acc,
+          totalBetters: result.idx,
+        });
       }
       console.log(`%c reward => `, 'color: #ff0000', result.sum / winners.total * this.bet.value, winners);
       this.heightDataSubs.unsubscribe();

@@ -27,13 +27,13 @@ export class BetdataService {
     return this.fire.collection('bet', ref => ref.where('height', '==', height))
     .get({source: 'server'}).pipe(
       map(snapshot => {
-          let items = [];
+          const items = [];
           snapshot.docs.map(a => {
               const data = a.data();
               const id = a.id;
               items.push({ id, ...data })
           })
-          return items
+          return items;
       }),
   );
   }
