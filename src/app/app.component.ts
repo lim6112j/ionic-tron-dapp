@@ -26,6 +26,11 @@ export class AppComponent implements OnInit {
       title: 'Goods',
       url: 'goods',
       icon: 'basket'
+    },
+    {
+      title: 'Gold',
+      url: 'gold',
+      icon: 'cash'
     }
   ];
   public labels = ['Ethereum', 'Oil', 'Stock', 'Weather', 'Goods'];

@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Gold</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-img [src] = "headerImage"></ion-img>
+          <ion-card-header>
+            <ion-card-subtitle>
+              Predict Any In the World
+            </ion-card-subtitle>
+            <ion-card-title>
+              Instruction
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+          Predict the daily price of gold comparing previous day price.  'LOW', 'HIGH', Click up, down and Input bet value.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-card class="welcome-card">
+        <ion-card-header>
+          <ion-card-subtitle>{{subtitle}}</ion-card-subtitle>
+          <ion-card-title>
+            {{title}}
+          </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div id="barChart"></div>
+        </ion-card-content>
+      </ion-card>
+    </ion-row>
+  </ion-grid>
+</ion-content>

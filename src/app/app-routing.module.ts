@@ -18,6 +18,10 @@ const routes: Routes = [
   {
     path: 'multi',
     loadChildren: () => import('./pages/multi/multi.module').then( m => m.MultiPageModule)
+  },
+  {
+    path: 'gold',
+    loadChildren: () => import('./pages/gold/gold.module').then( m => m.GoldPageModule)
   }
 ];
 
