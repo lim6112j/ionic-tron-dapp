@@ -43,8 +43,8 @@ export class GoldPage implements OnInit{
     private _platform: Platform,
     private _http: HttpClient
   ) {
-    this.width = 900 - this.margin.left - this.margin.right;
-    this.height = 500 - this.margin.top - this.margin.bottom;
+    this.width = this._platform.width() - this.margin.left - this.margin.right;
+    this.height = this._platform.height() - this.margin.top - this.margin.bottom;
   }
   ngOnInit(): void {
     this._http.get('assets/yahoo.csv', { responseType: 'text' }).subscribe(v => {
@@ -138,11 +138,11 @@ export class GoldPage implements OnInit{
     const instance = selection => {
       selection.each((data, selectionIndex, nodes) => {
         labelJoin(d3.select(nodes[selectionIndex]), data)
-          .attr("transform", (_, i) => "translate(100, " + (i + 1) * 15 + ")")
+          .attr("transform", (_, i) => "translate(130, " + (i + 1) * 15 + ")")
           .text(d => d.name);
   
         valueJoin(d3.select(nodes[selectionIndex]), data)
-          .attr("transform", (_, i) => "translate(160, " + (i + 1) * 15 + ")")
+          .attr("transform", (_, i) => "translate(190, " + (i + 1) * 15 + ")")
           .text(d => d.value);
       });
     };
