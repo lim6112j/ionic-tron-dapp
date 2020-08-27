@@ -46,38 +46,162 @@ export class GoldPage implements OnInit{
     this.height = this._platform.height() - this.margin.top - this.margin.bottom;
   }
   ngOnInit(): void {
-    this._http.get('assets/yahoo.csv', { responseType: 'text' }).subscribe(v => {
+    this._http.get('assets/gold.csv', { responseType: 'text' }).subscribe(v => {
       var objs = d3.csvParse(v);
       console.log(objs);
       const data = objs.map(d => ({
-        date: new Date((d.Timestamp as any) * 1000),
-        volume: Number(d.volume),
-        high: Number(d.high),
-        low: Number(d.low),
-        open: Number(d.open),
-        close: Number(d.close)
-      }));
+        date: d.Date.split(",")[0],
+        high: Number(d.High.split(",").join("")),
+        low: Number(d.Low.split(",").join("")),
+        open: Number(d.Open.split(",").join("")),
+        close: Number(d.Price.split(",").join("")),
+        change: Number(d.Change.split("%")[0])
+      }))
+      // console.log(data)
+      // const data = objs.map(d => ({
+      //   date: new Date((d.Timestamp as any) * 1000),
+      //   volume: Number(d.volume),
+      //   high: Number(d.high),
+      //   low: Number(d.low),
+      //   open: Number(d.open),
+      //   close: Number(d.close)
+      // }));
       // console.log(data);
 
       // this.createChart(data);
+      this.createChart2(data);
     });
-    this._http.get('assets/yahoo.json', { responseType: 'json'}).subscribe((v:any) => {
-      const chartData = v.chart.result[0];
-      const quoteData = chartData.indicators.quote[0];
-      const result = chartData.timestamp.map((d, i) => ({
-        date: new Date(d * 1000 - 5 * 1000 * 60 * 60),
-        high: quoteData.high[i],
-        low: quoteData.low[i],
-        open: quoteData.open[i],
-        close: quoteData.close[i],
-        volume: quoteData.volume[i]
-      }));
-      this.createChart(result.slice(0, 500));
-    });
+    // this._http.get('assets/gold.json', { responseType: 'json'}).subscribe((v:any) => {
+    //   const chartData = v.chart.result[0];
+    //   const quoteData = chartData.indicators.quote[0];
+    //   const result = chartData.timestamp.map((d, i) => ({
+    //     date: new Date(d * 1000 - 5 * 1000 * 60 * 60),
+    //     high: quoteData.high[i],
+    //     low: quoteData.low[i],
+    //     open: quoteData.open[i],
+    //     close: quoteData.close[i],
+    //     volume: quoteData.volume[i]
+    //   }));
+    //   this.createChart(result.slice(0, 500));
+    // });
   }
 
   ionViewDidEnter() {
 
+  }
+  createChart2(data) {
+    const margin = this.margin,
+    width = this.width - margin.left - margin.right,
+    height = this.height - margin.top - margin.bottom;
+    data = data.reverse();
+        // append the svg object to the body of the page
+    var svg = d3.select("#complex-chart")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+    const sumstat:any = d3.nest()
+      .key(function(d: any) {return d.date})
+      .rollup(function(d: any):any{
+        console.log(d)
+        const high = d[0].high;
+        const low = d[0].low;
+        const open = d[0].open;
+        const close = d[0].close;
+        const top = open > close ? open : close;
+        const bottom = open < close ? open : close;
+        return {high, low, open, close, top, bottom};
+      })
+      .entries(data);
+      // console.log(sumstat)
+          // Show the X scale
+      var x = d3.scaleBand()
+      .range([ 0, width ])
+      .domain(sumstat.map(d => d.key))
+      .paddingInner(1)
+      .paddingOuter(.5)
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x))
+
+    // Show the Y scale
+    var y = d3.scaleLinear()
+      .domain([1800, 2150])
+      .range([height, 0])
+    svg.append("g").call(d3.axisLeft(y))
+    // Show the main vertical line
+    svg
+      .selectAll("vertLines")
+      .data(sumstat)
+      .enter()
+      .append("line")
+      //   .attr("aaa", function(d) {
+      //       console.log(d.value.low);
+      //   })
+        .attr("x1", function(d:any){return(x(d.key))})
+        .attr("x2", function(d:any){return(x(d.key))})
+        .attr("y1", function(d:any){return y(d.value.low)})
+        .attr("y2", function(d:any){return y(d.value.high)})
+        .attr("stroke", "black")
+        .style("width", 40)
+// rectangle for the main box
+var boxWidth = 10
+svg
+  .selectAll("boxes")
+  .data(sumstat)
+  .enter()
+  .append("rect")
+      .attr("x", function(d:any){return(x(d.key)-boxWidth/2)})
+      .attr("y", function(d:any){return(y(d.value.top))})
+      .attr("height", function(d:any){return(y(d.value.bottom)-y(d.value.top))})
+      .attr("width", boxWidth )
+      .attr("stroke", "black")
+      .style("fill", (d:any) => d.value.open == d.value.bottom ? "#b90a0a" : "#16aa2e")
+svg.on("mousemove", function() { // lamda function make trouble , why??? consult this binding !!
+  const mouse = d3.mouse(this);
+  const mousex = mouse[0];
+  const mousey = mouse[1];
+  // console.log(mousex);
+  // console.log(sumstat)
+  // console.log(typeof x("Jul 28"));
+  let result = sumstat.reduce((acc, curr, i) => {
+    // console.log("mousex : ", mousex, " x(curr.key) : ", x(curr.key));
+    // console.log("diff : ", Math.abs(mousex - x(curr.key)), " acc.diff : ", acc.diff)
+    // console.log("curr : ", curr)
+    let diff = Math.abs(mousex - x(curr.key));
+    acc.diff = acc.diff > diff ? diff : acc.diff;
+    acc.val = acc.diff === diff ? curr.key : acc.val; // acc.diff already changed above line, so === should be used
+    acc.idx = acc.diff === diff ? i : acc.idx;
+    // console.log("acc : ", acc);
+    return acc;
+  }, {val: '', diff: 1000, idx: 0})
+  // console.log((sumstat[result.idx]).key);
+  const foundData = sumstat[result.idx];
+  const legendData = [
+    {key: 'Date', value: result.val},
+    {key: 'high', value: foundData.value.high},
+    {key: 'low', value: foundData.value.low},
+    {key: 'open', value: foundData.value.open},
+    {key: 'close', value: foundData.value.close}
+  ];
+
+  svg.selectAll('#gText').remove();
+  const gText = svg.append("g")
+  .attr("transform", "translate(" + (30) + ",0)")
+  .attr("id", "gText");
+  gText.selectAll('legend')
+  .data(legendData)
+  .enter()
+  .append('text')
+  .attr("id", "legend")
+  .attr('x', 0)
+  .attr('y', (d, i) => i*20 + 60)
+  .text(d => d.key+ " : " + d.value);
+}).on("mouseout", function() {
+  console.log('mouse out !!!');});
   }
   createChart(data) {
     const xExtent = fc.extentDate()
@@ -168,7 +292,30 @@ export class GoldPage implements OnInit{
     .y(d => yScale);
     // multi view
     const multi = fc.seriesSvgMulti()
-      .series([gridlines, areaSeries, lineSeries, movingAverageSeries, volumeSeries]);
+      .series([gridlines, areaSeries, lineSeries, movingAverageSeries, volumeSeries])
+      .mapping((data, index, series) => {
+        if (data.loading) {
+          return [];
+        }
+        switch (series[index]) {
+          case chartLegend:
+            const lastPoint = data[data.length - 1];
+            const legendValue = data.crosshair.length
+              ? data.crosshair[0]
+              : lastPoint;
+            return legendData(legendValue);
+          case crosshair:
+            return data.crosshair;
+          // case verticalAnnotation:
+          //   return flatten(data.tradingHoursArray.map(markersForDay));
+          // case bands:
+          //   return d3.pairs(
+          //     data.tradingHoursArray.map(d => exchangeOpeningHours(d[0]))
+          //   );
+          default:
+            return data;
+        }
+      });;
     // legend
     const legend = () => {
       const labelJoin = fc.dataJoin("text", "legend-label");
