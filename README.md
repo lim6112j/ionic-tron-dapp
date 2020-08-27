@@ -31,7 +31,8 @@ server {
         }
 
 	location /clesson/ {
-		proxy_pass http://3.34.124.190:8545;
+		#proxy_pass http://3.34.124.190:8545;
+        proxy_pass https://blockchain.defora.io;
 	}
     listen [::]:443 ssl ipv6only=on; # managed by Certbot
     listen 443 ssl; # managed by Certbot
