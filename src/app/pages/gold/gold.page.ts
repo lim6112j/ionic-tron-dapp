@@ -42,7 +42,8 @@ export class GoldPage implements OnInit{
     private _platform: Platform,
     private _http: HttpClient
   ) {
-    this.width = this._platform.width() - this.margin.left - this.margin.right;
+    // this.width = this._platform.width() - this.margin.left - this.margin.right;
+    this.width = this._platform.width();
     this.height = this._platform.height() - this.margin.top - this.margin.bottom;
   }
   ngOnInit(): void {
@@ -92,7 +93,7 @@ export class GoldPage implements OnInit{
   createChart2(data) {
     const margin = this.margin,
     width = this.width - margin.left - margin.right,
-    height = this.height - margin.top - margin.bottom;
+    height = this.height/2 - margin.top - margin.bottom;
     data = data.reverse();
         // append the svg object to the body of the page
     var svg = d3.select("#complex-chart")
@@ -190,7 +191,7 @@ svg.on("mousemove", function() { // lamda function make trouble , why??? consult
 
   svg.selectAll('#gText').remove();
   const gText = svg.append("g")
-  .attr("transform", "translate(" + (30) + ",0)")
+  .attr("transform", "translate(" + (10) + ",0)")
   .attr("id", "gText");
   gText.selectAll('legend')
   .data(legendData)
@@ -198,7 +199,7 @@ svg.on("mousemove", function() { // lamda function make trouble , why??? consult
   .append('text')
   .attr("id", "legend")
   .attr('x', 0)
-  .attr('y', (d, i) => i*20 + 60)
+  .attr('y', (d, i) => i*20)
   .text(d => d.key+ " : " + d.value);
 }).on("mouseout", function() {
   console.log('mouse out !!!');});
